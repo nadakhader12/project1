@@ -29,8 +29,8 @@
                 @foreach ($processes as $proces)
                     <td>{{ $proces->title }}</td>
 
-                    <td><img width="80" src="{{ asset('uploads/categories/'.$proces->image) }}" alt=""></td>
-                    <td>{{ $proces->$content }}</td>
+                    <td><img width="40" src="{{ asset('uploads/process/'.$proces->image) }}" alt=""></td>
+                    <td>{{ $proces->content }}</td>
                     <td>
                         <a class="btn btn-primary" href="{{ route('admin.process.edit', $proces->id) }}"><i class="fas fa-edit"></i></a>
                         <form class="d-inline" action="{{ route('admin.process.destroy', $proces->id) }}" method="POST">

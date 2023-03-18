@@ -16,7 +16,7 @@ class featurescontroller extends Controller
      */
     public function index()
     {
-        $features = feature::with('title', 'type','icon','content')->orderByDesc('id')->paginate(10);
+        $features = feature::orderByDesc('id')->paginate(10);
 
         return view('admin.features.index', compact('features'));
     }
@@ -39,13 +39,13 @@ class featurescontroller extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-
-        d
+{
         // Validate Data
         $request->validate([
             'title' => 'required',
             'type' => 'required',
             'icon' => 'required',
+            'content' => 'required',
         ]);
 
         // Upload Images
@@ -117,7 +117,7 @@ class featurescontroller extends Controller
         if($request->hasFile('icon')) {
             $ico = $request->file('icon');
             $icon_name = rand(). time().$ico->getClientOriginalName();
-            $ico->move(public_path('uploads/feature'), $icon_name);
+            $ico->move(public_path('uploads/features'), $icon_name);
         }
 
         // Store To Database

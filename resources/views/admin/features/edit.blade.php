@@ -16,28 +16,27 @@
 
         <div class="mb-3">
             <label>title</label>
-            <input type="text" name="title" placeholder="title" class="form-control" value="{{ $category->name_en }}">
+            <input type="text" name="title" placeholder="title" class="form-control" value="{{ $feat->title }}">
         </div>
 
         <div class="mb-3">
             <label>type</label>
-            <select name="type" class="form-control">
+            <select name="type" class="form-control" >
 
-                <option value="">Select</option>
-                @foreach ($features as $item)
-                    <option {{ $feat->id == $item->id ? 'selected' : '' }} value="{{ $item->id }}">{{ $item->$title }}</option>
-                @endforeach
+                <option value="feature">features</option>
+                <option value="service">services</option>
+
             </select>
         </div>
         <div class="mb-3">
             <label>Icon</label>
             <input type="file" name="icon"  class="form-control">
-            <img width="80" src="{{ asset('uploads/feature/'.$feat->icon) }}" alt="">
+            <img width="40" src="{{ asset('uploads/features/'.$feat->icon) }}" alt="">
         </div>
 
         <div class="mb-3">
             <label>content</label>
-            <input type="text" name="content" placeholder="content" class="form-control" value="{{ $category->name_ar }}">
+            <input type="text" name="content" placeholder="content" class="form-control" value="{{ $feat->content }}">
         </div>
         <button class="btn btn-success px-5">Update</button>
     </form>

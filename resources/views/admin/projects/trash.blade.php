@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <h1>All Trashed project</h1>
+    <h1>All Trashed projects</h1>
     @if (session('msg'))
         <div class="alert alert-{{ session('type') }}">
             {{ session('msg') }}
@@ -28,26 +28,17 @@
         </thead>
         <tbody>
             <tr>
-                @foreach ($projects as $project)
-                <td>
-                    {{ $project->$name }}
-                </td>
-                    <td><img width="80" src="{{ asset('uploads/project/'.$project->image) }}" alt=""></td>
+                @foreach ($projects as $pro)
+                    <td>{{ $pro->name }}</td>
+
+                    <td><img width="80" src="{{ asset('uploads/projects/'.$pro->image) }}" alt=""></td>
+                    <td>{{ $pro->client }}</td>
+                    <td>{{ $pro->category }}</td>
+                    <td>{{ $pro->feature_id }}</td>
+                    <td>{{ $pro->content}}</td>
                     <td>
-                        {{ $project->$client }}
-                    </td>
-                    <td>
-                        {{ $project->$category}}
-                    </td>
-                    <td>
-                        {{ $project->$feature_id}}
-                    </td>
-                    <td>
-                        {{ $project->$content}}
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" href="{{ route('admin.projects.edit', $project->id) }}"><i class="fas fa-edit"></i></a>
-                        <form class="d-inline" action="{{ route('admin.projects.destroy', $project->id) }}" method="POST">
+                        <a class="btn btn-primary" href="{{ route('admin.projects.edit', $pro->id) }}"><i class="fas fa-edit"></i></a>
+                        <form class="d-inline" action="{{ route('admin.projects.destroy', $pro->id) }}" method="POST">
                             @csrf
                             @method('delete')
                         <button class="btn btn-danger" onclick="return confirm('Are you sure')"><i class="fas fa-trash"></i></button>

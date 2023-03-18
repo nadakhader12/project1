@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\project;
@@ -11,6 +11,8 @@ class projectscontroller extends Controller
 {
     /**
      * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
@@ -21,39 +23,49 @@ class projectscontroller extends Controller
 
     /**
      * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        $projects = project::all();
-        return view('admin.projects.create');
+        $projects = project::select('name', 'image', 'client','category','feature_id','content')->get();
+        return view('admin.projects.create', compact('projects'));
     }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
-    {
-         // Validate Data
-         $request->validate([
+{
+        // Validate Data
+        $request->validate([
             'name' => 'required',
-            'content' => 'required',
             'image' => 'required',
             'client' => 'required',
-            'category' => 'required',
-            'feature_id' => 'required',
+            'category'=>'required',
+            'feature_id'=>'required',
+            'content' => 'required',
         ]);
-// Upload Images
+
+        // Upload Images
         $image_name = null;
         if($request->hasFile('image')) {
-            $image = $request->file('image');
-            $image_name = rand(). time().$image->getClientOriginalName();
-            $image->move(public_path('uploads/project'), $image_name);
+            $img = $request->file('image');
+            $image_name = rand(). time().$img->getClientOriginalName();
+            $img->move(public_path('uploads/projects'), $image_name);
         }
 
         // Store To Database
         project::create([
             'name' => $request->name,
-            'content' => $request->content,
             'image' => $image_name,
             'client' => $request->client,
             'category' => $request->category,
             'feature_id' => $request->feature_id,
+            'content' => $request->content,
         ]);
 
         // Redirect
@@ -62,75 +74,85 @@ class projectscontroller extends Controller
 
     /**
      * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+
     }
 
     /**
      * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        $project = project::findOrFail($id);
-        $projects = project::all();
+        $pro = project::findOrFail($id);
+        $projects = project::select('name', 'image', 'client','category','feature_id','content')->where('id', '!=', $pro->id)->get();
 
-        return view('admin.projects.edit', compact('project', 'projects'));
+        return view('admin.projects.edit', compact('pro', 'projects'));
     }
 
     /**
      * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         // Validate Data
         $request->validate([
-            'name' => 'required',
+
+        'name' => 'required',
             'content' => 'required',
             'image' => 'required',
             'client' => 'required',
             'category' => 'required',
-            'feature_id' => 'required',
+            'feature_id' => 'nullable|exists:features,id',
         ]);
 
-        $project = project::findOrFail($id);
+        $pro = project::findOrFail($id);
 
         // Upload Images
-        $image_name = $project->image;
-        if($request->hasFile('image')) {
-            $image = $request->file('image');
-            $image_name = rand(). time().$image->getClientOriginalName();
-            $image->move(public_path('uploads/projects'), $image_name);
+        $icon_name = $pro->icon;
+        if($request->hasFile('icon')) {
+            $ico = $request->file('icon');
+            $icon_name = rand(). time().$ico->getClientOriginalName();
+            $ico->move(public_path('uploads/projects'), $icon_name);
         }
 
         // Store To Database
-        $project->update([
+        $pro->update([
             'name' => $request->name,
             'content' => $request->content,
-            'image' => $image_name,
+            'image' => $request->image,
             'client' => $request->client,
             'category' => $request->category,
             'feature_id' => $request->feature_id,
-
         ]);
 
         // Redirect
         return redirect()->route('admin.projects.index')->with('msg', 'project updated successfully')->with('type', 'info');
-
     }
 
     /**
      * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $project = project::findOrFail($id);
+        $pro = project::findOrFail($id);
 
-        File::delete(public_path('uploads/features/'.$project->image));
-
-
-        $project->delete();
+        File::delete(public_path('uploads/projects/'.$pro->icon));
+        $pro->delete();
 
         return redirect()->route('admin.projects.index')->with('msg', 'project deleted successfully')->with('type', 'danger');
     }
@@ -143,9 +165,7 @@ class projectscontroller extends Controller
     }
 
     public function restore($id)
-    {
-        // feature::onlyTrashed()->find($id)->update(['deleted_at' => null]);
-        project::onlyTrashed()->find($id)->restore();
+    { project::onlyTrashed()->find($id)->restore();
 
         return redirect()->route('admin.projects.index')->with('msg', 'project restored successfully')->with('type', 'warning');
     }

@@ -15,7 +15,7 @@ class processController extends Controller
      */
     public function index()
     {
-        $processes = process::with('title', 'image','content')->orderByDesc('id')->paginate(10);
+        $processes = process::orderByDesc('id')->paginate(10);
 
         return view('admin.process.index', compact('processes'));
     }

@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\feature;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class project extends Model
 {
@@ -12,6 +13,6 @@ class project extends Model
     protected $guarded=[];
     public function service()
     {
-        return $this->belongTo(feature::class)->withDefault();
+       return $this->belongTo(feature::class )->withDefault();
     }
 }

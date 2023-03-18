@@ -19,8 +19,8 @@
         <thead>
             <tr>
                 <th>title</th>
-                <th>icon</th>
                 <th>type</th>
+                <th>icon</th>
                 <th>content</th>
             </tr>
         </thead>
@@ -29,10 +29,10 @@
                 @foreach ($features as $feat)
                     <td>{{ $feat->title }}</td>
                     <td>
-                        {{ $feat->$type }}
+                        {{ $feat->type }}
                     </td>
 
-                    <td><img width="80" src="{{ asset('uploads/features/'.$feat->icon) }}" alt=""></td>
+                    <td><img width="40" src="{{ asset('uploads/features/'.$feat->icon) }}" alt=""></td>
                     <td>{{ $feat->content}}</td>
                     <td>
                         <a class="btn btn-primary" href="{{ route('admin.features.edit', $feat->id) }}"><i class="fas fa-edit"></i></a>
